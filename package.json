@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "build": "npm run build --prefix frontend",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "dev:client": "npm run dev --prefix frontend",
     "dev:server": "node server/index.js",
     "install:all": "npm install && cd frontend && npm install",
-    "start": "npm run dev",
+    "start": "node server/index.js",
     "test": "npm run test --prefix frontend"
   },
   "dependencies": {

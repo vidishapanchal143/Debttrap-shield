@@ -27,13 +27,12 @@ const upload = multer({
   }
 });
 
-app.use(cors({ origin: [
-  'http://localhost:5173',
-  'http://127.0.0.1:5173',
-  'http://localhost:5174',
-  'http://127.0.0.1:5174'
-] }));
+app.use(cors());
 app.use(express.json());
+
+// Serve static frontend files in production
+const frontendDist = path.join(__dirname, '../frontend/dist');
+app.use(express.static(frontendDist));
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -148,6 +147,12 @@ Rules:
       message: 'Gemini service is unavailable. Please enter values manually.'
     });
   }
+});
+
+// SPA fallback: any non-API route serves index.html
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api')) return next();
+  res.sendFile(path.join(frontendDist, 'index.html'));
 });
 
 app.listen(PORT, () => {
